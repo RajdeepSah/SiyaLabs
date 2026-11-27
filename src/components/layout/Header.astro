@@ -1,0 +1,113 @@
+---
+import Logo from '../brand/Logo.astro';
+import Icon from '../ui/Icon.astro';
+import { NAV } from '../../config/site';
+
+const path = Astro.url.pathname.replace(/\/?$/, '/');
+const current = (href: string) => (path === href ? 'page' : path.startsWith(href) ? 'true' : undefined);
+---
+
+<header class="site-header" data-header>
+  <div class="container-site flex h-(--header-h) items-center justify-between">
+    <a href="/" class="logo-link" aria-label="Siya Labs, home">
+      <Logo class="h-7 w-auto md:h-8" />
+    </a>
+
+    <nav aria-label="Primary" class="hidden md:block">
+      <ul class="flex items-center gap-1">
+        {
+          NAV.map((item) => (
+            <li>
+              <a href={item.href} class="nav-link" aria-current={current(item.href)}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+        <li class="ml-5">
+          <a href="/contact/" class="btn btn-primary btn-sm">Get in touch</a>
+        </li>
+      </ul>
+    </nav>
+
+    <button
+      type="button"
+      class="menu-btn md:hidden"
+      aria-haspopup="dialog"
+      aria-expanded="false"
+      aria-controls="mobile-nav"
+      data-menu-open
+    >
+      <Icon name="menu" class="size-6" />
+      <span class="sr-only">Open menu</span>
+    </button>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    view-transition-name: site-header;
+    transition:
+      background-color 0.35s ease,
+      box-shadow 0.35s ease;
+  }
+  .site-header[data-scrolled] {
+    background-color: rgb(247 243 234 / 0.86);
+    -webkit-backdrop-filter: saturate(1.5) blur(16px);
+    backdrop-filter: saturate(1.5) blur(16px);
+    box-shadow: 0 1px 0 var(--color-line);
+  }
+  .logo-link {
+    display: inline-flex;
+    padding: 0.4rem;
+    margin-left: -0.4rem;
+    border-radius: 6px;
+  }
+  .nav-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding-inline: 0.9rem;
+    font-weight: 500;
+    font-size: 0.9375rem;
+    text-decoration: none;
+    border-radius: 6px;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0.9rem;
+    right: 0.9rem;
+    bottom: 0.55rem;
+    height: 1.5px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s var(--ease-brand);
+  }
+  .nav-link:hover::after,
+  .nav-link[aria-current]::after {
+    transform: scaleX(1);
+  }
+  .nav-link[aria-current]::after {
+    background: var(--color-terracotta);
+  }
+  .menu-btn {
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-right: -0.6rem;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  @media (min-width: 48rem) {
+    .menu-btn {
+      display: none;
+    }
+  }
+</style>

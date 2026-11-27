@@ -1,0 +1,248 @@
+---
+/**
+ * Hero graphic: the Siya Labs mark presented as its own construction drawing.
+ * Every guide is derived from the traced logo (see scripts/trace-logo.mjs):
+ *   - circles are least-squares fits of the mark's four bowl arcs,
+ *   - both 45°-ish cuts lie on one shared axis (≈47.75°) through the centre,
+ *   - crop marks sit on the mark's bounding box.
+ * Coordinates: 400×400 canvas, mark offset by (90.95, 84.8).
+ *
+ * The intro plays with CSS alone (no JS dependency); idle motion pauses when
+ * off screen via [data-offscreen] (set by site.ts). Reduced motion → static.
+ */
+import mark from '../brand/mark.json';
+
+const OX = 90.95;
+const OY = 84.8;
+const p = (x: number, y: number) => [+(x + OX).toFixed(2), +(y + OY).toFixed(2)] as const;
+
+// Fitted bowl circles (mark coordinates → canvas)
+const circles = [
+  { c: p(89.7, 93.7), r: 92.7, cls: 'c c1', draw: true },
+  { c: p(141.3, 149.9), r: 79, cls: 'c c2', draw: true },
+  { c: p(66.9, 75.9), r: 67.3, cls: 'c c3 dashed', draw: false },
+  { c: p(163.5, 158.4), r: 54.7, cls: 'c c4 dashed', draw: false },
+];
+const [L, T] = p(0, 0);
+const [R, B] = p(218.1, 230.4);
+const tick = 9;
+// Axis through the centre at ≈47.75°
+const axis = { x1: 18.3, y1: 400, x2: 381.7, y2: 0 };
+// Angle annotation where the axis meets the baseline guide
+const ax = 95.33;
+const arcR = 26;
+// Outside angle: from the guide pointing left (180°) down to the axis (132.25°)
+const arcStart = [ax - arcR, B];
+const arcEnd = [ax + arcR * Math.cos((132.25 * Math.PI) / 180), B + arcR * Math.sin((132.25 * Math.PI) / 180)];
+---
+
+<svg
+  class="hero-mark"
+  viewBox="0 0 400 400"
+  role="img"
+  aria-label="The Siya Labs mark drawn from its construction geometry: guide lines, fitted circles and the 48-degree axis its two halves share."
+  data-hero-mark
+>
+  <g class="far">
+    <g class="guides">
+      <line class="g g1" x1="0" y1={T} x2="400" y2={T} pathLength="1"></line>
+      <line class="g g2" x1="0" y1={B} x2="400" y2={B} pathLength="1"></line>
+      <line class="g g3" x1={L} y1="0" x2={L} y2="400" pathLength="1"></line>
+      <line class="g g4" x1={R} y1="0" x2={R} y2="400" pathLength="1"></line>
+      <line class="g g5 axis" x1={axis.x1} y1={axis.y1} x2={axis.x2} y2={axis.y2} pathLength="1"></line>
+      <line class="mid" x1="0" y1="200" x2="400" y2="200"></line>
+      <line class="mid" x1="200" y1="0" x2="200" y2="400"></line>
+    </g>
+
+    <g class="circles">
+      {
+        circles.map(({ c, r, cls, draw }) => (
+          <circle class={cls} cx={c[0]} cy={c[1]} r={r} pathLength={draw ? '1' : undefined} />
+        ))
+      }
+      {
+        circles.map(({ c }) => (
+          <path class="centre" d={`M${c[0] - 3.5} ${c[1]}h7M${c[0]} ${c[1] - 3.5}v7`} />
+        ))
+      }
+    </g>
+
+    <g class="ticks">
+      <path
+        d={`M${L - tick} ${T}h${tick}v${-tick} M${R + tick} ${T}h${-tick}v${-tick} M${L - tick} ${B}h${tick}v${tick} M${R + tick} ${B}h${-tick}v${tick}`}
+      ></path>
+    </g>
+
+    <g class="angle">
+      <path d={`M${arcStart[0]} ${arcStart[1]} A${arcR} ${arcR} 0 0 0 ${arcEnd[0].toFixed(2)} ${arcEnd[1].toFixed(2)}`}></path>
+      <text x={ax - arcR - 30} y={B + 22}>48°</text>
+    </g>
+  </g>
+
+  <g class="near">
+    <g transform={`translate(${OX} ${OY})`}>
+      <path class="half upper" d={mark.paths.upper}></path>
+      <path class="half lower" d={mark.paths.lower}></path>
+    </g>
+  </g>
+
+  <g class="orbit-group">
+    <circle class="orbit" cx="200" cy="200" r="176"></circle>
+    <g class="satellite">
+      <circle class="sat" cx="318.32" cy="69.72" r="5.5"></circle>
+    </g>
+  </g>
+</svg>
+
+<style>
+  .hero-mark {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    color: var(--color-pine);
+  }
+  .g,
+  .mid,
+  .c,
+  .centre,
+  .ticks path,
+  .angle path,
+  .orbit {
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+  }
+  .g {
+    stroke-width: 1;
+    stroke-opacity: 0.26;
+    stroke-dasharray: 1;
+  }
+  .axis {
+    stroke: var(--color-terracotta);
+    stroke-opacity: 0.55;
+  }
+  .mid {
+    stroke-width: 1;
+    stroke-opacity: 0.14;
+    stroke-dasharray: 2 5;
+  }
+  .c {
+    stroke-width: 1;
+    stroke-opacity: 0.34;
+    stroke-dasharray: 1;
+  }
+  .c.dashed {
+    stroke-opacity: 0.26;
+    stroke-dasharray: 3 5;
+  }
+  .centre {
+    stroke-width: 1;
+    stroke-opacity: 0.45;
+  }
+  .ticks path {
+    stroke-width: 1.25;
+    stroke-opacity: 0.6;
+  }
+  .angle path {
+    stroke-width: 1;
+    stroke: var(--color-terracotta);
+    stroke-opacity: 0.8;
+  }
+  .angle text {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    fill: var(--color-terracotta);
+  }
+  .half {
+    fill: currentColor;
+  }
+  .orbit {
+    stroke-width: 1.25;
+    stroke-opacity: 0.3;
+    stroke-dasharray: 0.1 7;
+  }
+  .sat {
+    fill: var(--color-terracotta);
+  }
+  .satellite {
+    transform-box: view-box;
+    transform-origin: 200px 200px;
+  }
+
+  /* Pointer parallax (values set by site.ts on [data-parallax]) */
+  .far,
+  .near {
+    transition: translate 0.9s var(--ease-brand);
+  }
+  .far {
+    translate: calc(var(--mx, 0) * -7px) calc(var(--my, 0) * -7px);
+  }
+  .near {
+    translate: calc(var(--mx, 0) * 4px) calc(var(--my, 0) * 4px);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .g1 { animation: hm-draw 1.2s var(--ease-flow) 0.05s both; }
+    .g2 { animation: hm-draw 1.2s var(--ease-flow) 0.15s both; }
+    .g3 { animation: hm-draw 1.2s var(--ease-flow) 0.25s both; }
+    .g4 { animation: hm-draw 1.2s var(--ease-flow) 0.35s both; }
+    .axis { animation: hm-draw 1.4s var(--ease-flow) 0.45s both; }
+    .mid { animation: hm-fade 1s ease 0.6s both; }
+    .c1 { animation: hm-draw 1.5s var(--ease-flow) 0.35s both; }
+    .c2 { animation: hm-draw 1.5s var(--ease-flow) 0.5s both; }
+    .c3 { animation: hm-fade 1s ease 0.8s both, hm-spin 90s linear 0.8s infinite; }
+    .c4 { animation: hm-fade 1s ease 0.9s both, hm-spin-rev 80s linear 0.9s infinite; }
+    .c3,
+    .c4 {
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    .centre { animation: hm-fade 0.8s ease 1.1s both; }
+    .upper { animation: hm-in-upper 1.1s var(--ease-brand) 0.85s both; }
+    .lower { animation: hm-in-lower 1.1s var(--ease-brand) 0.95s both; }
+    .ticks { animation: hm-fade 0.8s ease 1.5s both; }
+    .angle { animation: hm-fade 0.8s ease 1.65s both; }
+    .orbit { animation: hm-fade 1.2s ease 1.2s both, hm-dash 60s linear 1.2s infinite; }
+    .sat { animation: hm-pop 0.7s var(--ease-brand) 1.8s both; transform-box: fill-box; transform-origin: center; }
+    .satellite { animation: hm-orbit 140s linear 2.5s infinite; }
+
+    [data-offscreen] .c3,
+    [data-offscreen] .c4,
+    [data-offscreen] .orbit,
+    [data-offscreen] .satellite {
+      animation-play-state: paused;
+    }
+  }
+
+  @keyframes hm-draw {
+    from { stroke-dashoffset: 1; }
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes hm-fade {
+    from { opacity: 0; }
+  }
+  @keyframes hm-in-upper {
+    from { opacity: 0; translate: 18px -19.8px; }
+  }
+  @keyframes hm-in-lower {
+    from { opacity: 0; translate: -18px 19.8px; }
+  }
+  @keyframes hm-pop {
+    from { opacity: 0; scale: 0; }
+  }
+  @keyframes hm-orbit {
+    to { rotate: 360deg; }
+  }
+  @keyframes hm-spin {
+    to { rotate: 360deg; }
+  }
+  @keyframes hm-spin-rev {
+    to { rotate: -360deg; }
+  }
+  @keyframes hm-dash {
+    to { stroke-dashoffset: -140; }
+  }
+</style>

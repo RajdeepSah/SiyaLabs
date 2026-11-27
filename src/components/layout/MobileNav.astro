@@ -1,0 +1,147 @@
+---
+import Logo from '../brand/Logo.astro';
+import Icon from '../ui/Icon.astro';
+import { SITE } from '../../config/site';
+import { services } from '../../data/services';
+
+const primary = [
+  { label: 'Home', href: '/' },
+  { label: 'Services', href: '/services/' },
+  { label: 'About', href: '/about/' },
+  { label: 'Contact', href: '/contact/' },
+];
+---
+
+<dialog id="mobile-nav" class="mobile-nav" aria-label="Menu" data-mobile-nav>
+  <div class="flex min-h-full flex-col">
+    <div class="container-site flex h-(--header-h) shrink-0 items-center justify-between">
+      <a href="/" class="logo-link" aria-label="Siya Labs, home"><Logo class="h-7 w-auto" /></a>
+      <button type="button" class="menu-btn" data-menu-close>
+        <Icon name="close" class="size-6" />
+        <span class="sr-only">Close menu</span>
+      </button>
+    </div>
+
+    <nav aria-label="Mobile" class="container-site flex flex-1 flex-col pt-8 pb-10">
+      <ul>
+        {
+          primary.map((item) => (
+            <li class="m-item">
+              <a href={item.href} class="m-link">
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="m-item mt-10">
+        <p class="eyebrow">Services</p>
+        <ul class="mt-4 space-y-1">
+          {
+            services.map((s) => (
+              <li>
+                <a href={`/services/${s.slug}/`} class="m-sublink">
+                  {s.name}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="m-item mt-auto pt-10">
+        <a href="/contact/" class="btn btn-primary w-full">Get in touch <Icon name="arrow-right" /></a>
+        <a href={`mailto:${SITE.email}`} class="muted mt-5 block text-center text-sm">{SITE.email}</a>
+      </div>
+    </nav>
+  </div>
+</dialog>
+
+<style>
+  .mobile-nav {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--color-ivory);
+    color: var(--color-pine);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    opacity: 0;
+    transition:
+      opacity 0.3s var(--ease-brand),
+      overlay 0.3s allow-discrete,
+      display 0.3s allow-discrete;
+  }
+  .mobile-nav[open] {
+    opacity: 1;
+  }
+  @starting-style {
+    .mobile-nav[open] {
+      opacity: 0;
+    }
+  }
+  .mobile-nav::backdrop {
+    background: transparent;
+  }
+  .logo-link {
+    display: inline-flex;
+    padding: 0.4rem;
+    margin-left: -0.4rem;
+    border-radius: 6px;
+  }
+  .menu-btn {
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-right: -0.6rem;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .m-link {
+    display: block;
+    padding-block: 0.3rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2rem, 9vw, 2.75rem);
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    text-decoration: none;
+  }
+  .m-sublink {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    font-size: 1.0625rem;
+    text-decoration: none;
+  }
+  .m-item {
+    opacity: 1;
+    translate: 0 0;
+    transition:
+      opacity 0.5s var(--ease-brand),
+      translate 0.5s var(--ease-brand);
+  }
+  @starting-style {
+    .mobile-nav[open] .m-item {
+      opacity: 0;
+      translate: 0 14px;
+    }
+  }
+  .m-item:nth-child(2) {
+    transition-delay: 40ms;
+  }
+  .m-item:nth-child(3) {
+    transition-delay: 80ms;
+  }
+  .m-item:nth-child(4) {
+    transition-delay: 120ms;
+  }
+</style>

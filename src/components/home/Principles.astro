@@ -1,0 +1,40 @@
+---
+import { principles } from '../../data/company';
+---
+
+<section class="on-pine section" aria-labelledby="principles-title">
+  <div class="container-site">
+    <div class="max-w-2xl">
+      <p class="eyebrow" data-reveal>Principles</p>
+      <h2 id="principles-title" class="h2 mt-5" data-reveal>The standards behind everything we build.</h2>
+    </div>
+    <ol class="grid-lines mt-14 grid gap-px overflow-hidden rounded-3xl sm:grid-cols-2 lg:mt-20" data-reveal-stagger>
+      {
+        principles.map((p, i) => (
+          <li class="principle" data-reveal>
+            <span class="idx">0{i + 1}</span>
+            <h3 class="h3 mt-8 sm:mt-12">{p.title}</h3>
+            <p class="muted mt-3 max-w-md">{p.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .grid-lines {
+    background: var(--color-line-ivory);
+    box-shadow: 0 0 0 1px var(--color-line-ivory);
+  }
+  .principle {
+    background: var(--color-pine);
+    padding: clamp(1.75rem, 1rem + 2.5vw, 2.75rem);
+  }
+  .idx {
+    font-weight: 500;
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-terracotta-soft);
+  }
+</style>

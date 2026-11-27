@@ -1,0 +1,27 @@
+---
+import FounderPortrait from '../about/FounderPortrait.astro';
+import Icon from '../ui/Icon.astro';
+import { founder } from '../../data/founder';
+---
+
+<section class="section-sm" aria-labelledby="founder-title">
+  <div class="container-site">
+    <div class="grid items-center gap-10 rounded-[2rem] bg-surface p-5 sm:p-8 lg:grid-cols-12 lg:gap-6 lg:p-12">
+      <div class="lg:col-span-4" data-reveal>
+        <FounderPortrait sizes="(min-width: 1024px) 26vw, (min-width: 640px) 60vw, 90vw" />
+      </div>
+      <div class="lg:col-span-7 lg:col-start-6 lg:py-6">
+        <p class="eyebrow" data-reveal>Leadership</p>
+        <h2 id="founder-title" class="h2 mt-5" data-reveal>Founder-led and research-informed.</h2>
+        <p class="lede mt-6" data-reveal>{founder.teaser}</p>
+        <div class="mt-9 flex flex-wrap items-center justify-between gap-6" data-reveal>
+          <div>
+            <p class="font-display text-lg font-bold tracking-tight">{founder.name}</p>
+            <p class="muted text-sm">{founder.role}</p>
+          </div>
+          <a href="/about/#founder" class="link-arrow">Meet the founder <Icon name="arrow-right" /></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

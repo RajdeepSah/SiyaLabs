@@ -1,0 +1,10 @@
+---
+interface Props {
+  items: Record<string, unknown>[];
+}
+const { items } = Astro.props;
+// Escape "<" so the payload can never close the script element.
+const json = JSON.stringify({ '@context': 'https://schema.org', '@graph': items }).replace(/</g, '\\u003c');
+---
+
+<script type="application/ld+json" set:html={json} />

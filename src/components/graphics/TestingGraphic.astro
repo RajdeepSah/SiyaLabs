@@ -1,0 +1,203 @@
+---
+/**
+ * AI Software Testing: a suite re-runs case by case; one case fails
+ * (terracotta), an AI triage panel analyses it, the re-run passes.
+ * Frame 0 = every case passing with the last triage report shown.
+ */
+interface Props {
+  label: string;
+  class?: string;
+}
+const { label, class: className = '' } = Astro.props;
+const rows = [118, 150, 182, 214, 246, 278];
+const widths = [128, 100, 146, 92, 118, 108];
+const FAIL = 3;
+const fy = rows[FAIL];
+---
+
+<svg class={`gfx ${className}`} viewBox="0 0 480 360" role="img" aria-label={label} data-animate>
+  <rect class="ln" x="40" y="46" width="260" height="268" rx="14"></rect>
+  <path class="ln title" d="M64 67H132"></path>
+  <path class="ln track" d="M64 88H276"></path>
+  <path class="progress" d="M64 88H276" pathLength="1"></path>
+
+  {
+    rows.map((y, i) => (
+      <g>
+        <circle class="ln pending" cx="70" cy={y} r="8" />
+        <rect class="bar" x="90" y={y - 4} width={widths[i]} height="8" rx="4" />
+        <rect class="bar dim" x="246" y={y - 4} width="30" height="8" rx="4" />
+        <g class={`st st-${i + 1}`}>
+          <circle class="st-fill" cx="70" cy={y} r="8" />
+          <path class="mark" d={`M66.2 ${y + 0.4}l2.7 2.7L74 ${y - 2.8}`} />
+        </g>
+      </g>
+    ))
+  }
+
+  <g class="fail">
+    <circle class="fail-fill" cx="70" cy={fy} r="8"></circle>
+    <path class="mark" d={`M67.2 ${fy - 2.8}l5.6 5.6M72.8 ${fy - 2.8}l-5.6 5.6`}></path>
+  </g>
+
+  <path class="ln tri-link" d={`M300 ${fy}H330`} pathLength="1"></path>
+  <g class="tri-panel">
+    <path class="ln" d="M330 160H430L444 174V268H330Z"></path>
+    <circle class="core" cx="348" cy="182" r="6"></circle>
+    <path class="ln" d="M362 182H420"></path>
+    <path class="ln soft tri-line l1" d="M346 208H430" pathLength="1"></path>
+    <path class="ln soft tri-line l2" d="M346 226H408" pathLength="1"></path>
+    <path class="ln soft tri-line l3" d="M346 244H422" pathLength="1"></path>
+  </g>
+</svg>
+
+<style>
+  .soft {
+    stroke-opacity: 0.4;
+  }
+  .ln.title {
+    stroke-width: 3;
+  }
+  .ln.track {
+    stroke-opacity: 0.16;
+    stroke-width: 3;
+  }
+  .progress {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+    animation: tst-progress 7.2s linear infinite both;
+  }
+  .ln.pending {
+    stroke-opacity: 0.3;
+  }
+  .bar {
+    fill: currentColor;
+    fill-opacity: 0.14;
+  }
+  .bar.dim {
+    fill-opacity: 0.08;
+  }
+  .st,
+  .fail {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .st-fill {
+    fill: currentColor;
+  }
+  .fail-fill {
+    fill: var(--color-terracotta);
+  }
+  .mark {
+    fill: none;
+    stroke: var(--color-ivory);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .core {
+    fill: currentColor;
+  }
+  .fail {
+    opacity: 0;
+    animation: tst-fail 7.2s var(--ease-brand) infinite both;
+  }
+  .st-1 { animation: tst-r1 7.2s var(--ease-brand) infinite both; }
+  .st-2 { animation: tst-r2 7.2s var(--ease-brand) infinite both; }
+  .st-3 { animation: tst-r3 7.2s var(--ease-brand) infinite both; }
+  .st-4 { animation: tst-r4 7.2s var(--ease-brand) infinite both; }
+  .st-5 { animation: tst-r5 7.2s var(--ease-brand) infinite both; }
+  .st-6 { animation: tst-r6 7.2s var(--ease-brand) infinite both; }
+  .ln.tri-link {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+    animation: tst-link 7.2s ease infinite both;
+  }
+  .tri-panel {
+    animation: tst-panel 7.2s var(--ease-brand) infinite both;
+  }
+  .ln.tri-line {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+  .l1 { animation: tst-l1 7.2s ease infinite both; }
+  .l2 { animation: tst-l2 7.2s ease infinite both; }
+  .l3 { animation: tst-l3 7.2s ease infinite both; }
+
+  @keyframes tst-progress {
+    0%, 3% { stroke-dashoffset: 0; }
+    7% { stroke-dashoffset: 1; }
+    13% { stroke-dashoffset: 0.83; }
+    19% { stroke-dashoffset: 0.67; }
+    25% { stroke-dashoffset: 0.5; }
+    31%, 33% { stroke-dashoffset: 0.42; }
+    37% { stroke-dashoffset: 0.25; }
+    43%, 56% { stroke-dashoffset: 0.14; }
+    62%, 100% { stroke-dashoffset: 0; }
+  }
+  @keyframes tst-r1 {
+    0%, 3% { opacity: 1; scale: 1; }
+    7%, 11% { opacity: 0; scale: 0.5; }
+    13%, 100% { opacity: 1; scale: 1; }
+  }
+  @keyframes tst-r2 {
+    0%, 3% { opacity: 1; scale: 1; }
+    7%, 17% { opacity: 0; scale: 0.5; }
+    19%, 100% { opacity: 1; scale: 1; }
+  }
+  @keyframes tst-r3 {
+    0%, 3% { opacity: 1; scale: 1; }
+    7%, 23% { opacity: 0; scale: 0.5; }
+    25%, 100% { opacity: 1; scale: 1; }
+  }
+  @keyframes tst-r4 {
+    0%, 3% { opacity: 1; scale: 1; }
+    7%, 56% { opacity: 0; scale: 0.5; }
+    59%, 100% { opacity: 1; scale: 1; }
+  }
+  @keyframes tst-r5 {
+    0%, 3% { opacity: 1; scale: 1; }
+    7%, 35% { opacity: 0; scale: 0.5; }
+    37%, 100% { opacity: 1; scale: 1; }
+  }
+  @keyframes tst-r6 {
+    0%, 3% { opacity: 1; scale: 1; }
+    7%, 41% { opacity: 0; scale: 0.5; }
+    43%, 100% { opacity: 1; scale: 1; }
+  }
+  @keyframes tst-fail {
+    0%, 29% { opacity: 0; scale: 0.5; }
+    31%, 54% { opacity: 1; scale: 1; }
+    57%, 100% { opacity: 0; scale: 0.5; }
+  }
+  @keyframes tst-link {
+    0%, 3% { stroke-dashoffset: 0; opacity: 1; }
+    6% { stroke-dashoffset: 0; opacity: 0; }
+    7%, 33% { stroke-dashoffset: 1; opacity: 1; }
+    38%, 100% { stroke-dashoffset: 0; opacity: 1; }
+  }
+  @keyframes tst-panel {
+    0%, 3% { opacity: 1; translate: 0 0; }
+    7%, 37% { opacity: 0; translate: -6px 0; }
+    43%, 100% { opacity: 1; translate: 0 0; }
+  }
+  @keyframes tst-l1 {
+    0%, 6% { stroke-dashoffset: 0; }
+    7%, 42% { stroke-dashoffset: 1; }
+    47%, 100% { stroke-dashoffset: 0; }
+  }
+  @keyframes tst-l2 {
+    0%, 6% { stroke-dashoffset: 0; }
+    7%, 44% { stroke-dashoffset: 1; }
+    49%, 100% { stroke-dashoffset: 0; }
+  }
+  @keyframes tst-l3 {
+    0%, 6% { stroke-dashoffset: 0; }
+    7%, 46% { stroke-dashoffset: 1; }
+    51%, 100% { stroke-dashoffset: 0; }
+  }
+</style>

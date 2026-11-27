@@ -1,0 +1,120 @@
+---
+/**
+ * AI Automation: items leave an inbox, pass through an AI step and are routed
+ * to three different systems. Terracotta pulses are the only accent.
+ * Frame 0 of every loop equals the static composition (no load flicker).
+ */
+interface Props {
+  label: string;
+  class?: string;
+}
+const { label, class: className = '' } = Astro.props;
+const out = [92, 180, 268];
+const chamfer = (x: number, y: number, w: number, h: number, c: number) =>
+  `M${x} ${y}H${x + w - c}L${x + w} ${y + c}V${y + h}H${x}Z`;
+---
+
+<svg class={`gfx ${className}`} viewBox="0 0 480 360" role="img" aria-label={label} data-animate>
+  <!-- inbox -->
+  <path class="ln" d={chamfer(40, 128, 84, 104, 16)}></path>
+  <path class="ln soft" d="M56 156H104M56 180H96M56 204H100"></path>
+
+  <!-- connectors -->
+  <path class="ln soft" d="M124 180H196"></path>
+  <path class="ln soft" d="M284 180C322 180 322 92 360 92"></path>
+  <path class="ln soft" d="M284 180H360"></path>
+  <path class="ln soft" d="M284 180C322 180 322 268 360 268"></path>
+
+  <!-- AI step -->
+  <circle class="ln" cx="240" cy="180" r="44"></circle>
+  <circle class="ln ring" cx="240" cy="180" r="31"></circle>
+  <circle class="core" cx="240" cy="180" r="11"></circle>
+
+  <!-- systems -->
+  {
+    out.map((cy, i) => (
+      <g>
+        <path class={`hit hit-${i + 1}`} d={chamfer(360, cy - 24, 76, 48, 12)} />
+        <path class="ln" d={chamfer(360, cy - 24, 76, 48, 12)} />
+        <path class="ln" d={`M374 ${cy - 6}H412`} />
+        <path class="ln soft" d={`M374 ${cy + 7}H398`} />
+      </g>
+    ))
+  }
+
+  <!-- pulses (invisible in the static frame) -->
+  <path class="pulse pa pa1" d="M124 180H196" pathLength="1"></path>
+  <path class="pulse pa pa2" d="M124 180H196" pathLength="1"></path>
+  <path class="pulse pa pa3" d="M124 180H196" pathLength="1"></path>
+  <path class="pulse pb pb2" d="M284 180H360" pathLength="1"></path>
+  <path class="pulse pb pb1" d="M284 180C322 180 322 92 360 92" pathLength="1"></path>
+  <path class="pulse pb pb3" d="M284 180C322 180 322 268 360 268" pathLength="1"></path>
+</svg>
+
+<style>
+  .soft {
+    stroke-opacity: 0.38;
+  }
+  .ring {
+    stroke-dasharray: 4 6;
+    stroke-opacity: 0.55;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: auto-spin 18s linear infinite;
+  }
+  .core {
+    fill: currentColor;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: auto-core 1.5s var(--ease-brand) 0.75s infinite;
+  }
+  .hit {
+    fill: currentColor;
+    fill-opacity: 0;
+  }
+  .hit-2 {
+    animation: auto-hit 4.5s ease-out 1.55s infinite;
+  }
+  .hit-1 {
+    animation: auto-hit 4.5s ease-out 3.05s infinite;
+  }
+  .hit-3 {
+    animation: auto-hit 4.5s ease-out 4.55s infinite;
+  }
+  .pulse {
+    fill: none;
+    stroke: var(--color-terracotta);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-dasharray: 0.16 2;
+    stroke-dashoffset: 0.16;
+    opacity: 0;
+    animation: auto-pulse 4.5s var(--ease-flow) infinite both;
+  }
+  .pa1 { animation-delay: 0s; }
+  .pa2 { animation-delay: 1.5s; }
+  .pa3 { animation-delay: 3s; }
+  .pb2 { animation-delay: 0.75s; }
+  .pb1 { animation-delay: 2.25s; }
+  .pb3 { animation-delay: 3.75s; }
+
+  @keyframes auto-pulse {
+    0% { stroke-dashoffset: 0.16; opacity: 0; }
+    2% { opacity: 1; }
+    17% { stroke-dashoffset: -1; opacity: 1; }
+    18%, 100% { stroke-dashoffset: -1; opacity: 0; }
+  }
+  @keyframes auto-hit {
+    0% { fill-opacity: 0; }
+    5% { fill-opacity: 0.12; }
+    28%, 100% { fill-opacity: 0; }
+  }
+  @keyframes auto-core {
+    0%, 100% { scale: 1; }
+    14% { scale: 1.32; }
+    40% { scale: 1; }
+  }
+  @keyframes auto-spin {
+    to { rotate: 360deg; }
+  }
+</style>

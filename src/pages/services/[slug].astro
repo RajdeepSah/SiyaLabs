@@ -1,0 +1,227 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import ServiceGraphic from '../../components/graphics/ServiceGraphic.astro';
+import ServiceIcon from '../../components/graphics/ServiceIcon.astro';
+import ClosingCta from '../../components/ui/ClosingCta.astro';
+import Icon from '../../components/ui/Icon.astro';
+import { services, type Service } from '../../data/services';
+import { serviceSchema, breadcrumbSchema } from '../../lib/schema';
+
+export const getStaticPaths = (() =>
+  services.map((service) => ({ params: { slug: service.slug }, props: { service } }))) satisfies GetStaticPaths;
+
+interface Props {
+  service: Service;
+}
+const { service } = Astro.props;
+const others = services.filter((s) => s.slug !== service.slug);
+---
+
+<BaseLayout
+  title={`${service.seoTitle} | Siya Labs`}
+  description={service.seoDescription}
+  og={`services/${service.slug}`}
+  ogImageAlt={`Siya Labs: ${service.name}`}
+  schema={[
+    serviceSchema(service),
+    breadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: 'Services', path: '/services/' },
+      { name: service.name, path: `/services/${service.slug}/` },
+    ]),
+  ]}
+>
+  <section class="detail-hero" aria-labelledby="page-title">
+    <div class="container-site">
+      <Breadcrumbs
+        items={[{ name: 'Home', href: '/' }, { name: 'Services', href: '/services/' }, { name: service.name }]}
+      />
+      <div class="mt-10 grid items-center gap-12 lg:mt-14 lg:grid-cols-12 lg:gap-6">
+        <div class="lg:col-span-6">
+          <p class="eyebrow">Service {service.number}</p>
+          <h1 id="page-title" class="h1 mt-5">{service.name}</h1>
+          <p class="lede mt-7 max-w-xl">{service.lede}</p>
+          <div class="mt-10 flex flex-wrap gap-3">
+            <a href="/contact/" class="btn btn-primary">Discuss your project <Icon name="arrow-right" /></a>
+            <a href="/services/" class="btn btn-secondary">All services</a>
+          </div>
+        </div>
+        <div class="lg:col-span-6">
+          <div class="panel p-[7%]">
+            <ServiceGraphic service={service} />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-sm" aria-labelledby="capabilities-title">
+    <div class="container-site">
+      <div class="max-w-2xl">
+        <p class="eyebrow" data-reveal>Capabilities</p>
+        <h2 id="capabilities-title" class="h2 mt-5" data-reveal>What’s included</h2>
+      </div>
+      <ul class="mt-12 grid gap-x-6 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3" data-reveal-stagger>
+        {
+          service.capabilities.map((c, i) => (
+            <li class="cap" data-reveal>
+              <span class="idx">0{i + 1}</span>
+              <h3 class="h4 mt-5">{c.title}</h3>
+              <p class="muted mt-2">{c.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section-sm bg-surface" aria-labelledby="approach-title">
+    <div class="container-site">
+      <div class="max-w-2xl">
+        <p class="eyebrow" data-reveal>Approach</p>
+        <h2 id="approach-title" class="h2 mt-5" data-reveal>How we approach it</h2>
+      </div>
+      <ol class="mt-12 grid gap-6 md:grid-cols-3 lg:mt-16" data-reveal-stagger>
+        {
+          service.approach.map((step, i) => (
+            <li class="step-card" data-reveal>
+              <span class="node">0{i + 1}</span>
+              <h3 class="h3 mt-10">{step.title}</h3>
+              <p class="muted mt-3">{step.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section-sm" aria-labelledby="applications-title">
+    <div class="container-site grid gap-10 lg:grid-cols-12 lg:gap-6">
+      <div class="lg:col-span-5">
+        <p class="eyebrow" data-reveal>Applications</p>
+        <h2 id="applications-title" class="h2 mt-5" data-reveal>Where it helps</h2>
+        <p class="muted mt-5 max-w-sm" data-reveal>
+          Typical applications, not a fixed menu. Every engagement is scoped to your goals.
+        </p>
+      </div>
+      <ul class="border-t border-line lg:col-span-7" data-reveal-stagger>
+        {
+          service.applications.map((a) => (
+            <li class="app" data-reveal>
+              <Icon name="arrow-up-right" class="size-5 shrink-0 text-terracotta" />
+              <span>{a}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section-sm pt-0" aria-labelledby="others-title">
+    <div class="container-site">
+      <h2 id="others-title" class="h3" data-reveal>Explore other services</h2>
+      <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-reveal-stagger>
+        {
+          others.map((s) => (
+            <li data-reveal>
+              <a href={`/services/${s.slug}/`} class="other">
+                <span class="other-icon">
+                  <ServiceIcon slug={s.slug} class="size-6" />
+                </span>
+                <span class="h4 mt-8 block">{s.name}</span>
+                <span class="muted mt-2 block text-[0.9375rem]">{s.short}</span>
+                <Icon name="arrow-right" class="other-arrow" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <ClosingCta />
+</BaseLayout>
+
+<style>
+  .detail-hero {
+    padding-block: clamp(2rem, 1rem + 3vw, 3.5rem) clamp(3.5rem, 1.5rem + 5vw, 6rem);
+  }
+  .cap {
+    padding-block: 2rem 2.5rem;
+    border-top: 1px solid var(--color-line);
+  }
+  .idx {
+    font-weight: 500;
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-terracotta);
+  }
+  .step-card {
+    padding: clamp(1.75rem, 1rem + 2vw, 2.5rem);
+    border-radius: 1.5rem;
+    background: var(--color-ivory);
+  }
+  .node {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    box-shadow: inset 0 0 0 1px var(--color-pine);
+    font-weight: 500;
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .app {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding-block: 1.4rem;
+    border-bottom: 1px solid var(--color-line);
+    font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+    line-height: 1.45;
+  }
+  .app :global(svg) {
+    margin-top: 0.2rem;
+  }
+  .other {
+    position: relative;
+    display: block;
+    height: 100%;
+    padding: 1.75rem;
+    border-radius: 1.25rem;
+    box-shadow: inset 0 0 0 1px var(--color-line);
+    text-decoration: none;
+    transition:
+      box-shadow 0.25s ease,
+      background-color 0.25s ease;
+  }
+  .other:hover {
+    background: var(--color-surface);
+    box-shadow: inset 0 0 0 1px var(--color-line-strong);
+  }
+  .other-icon {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    background: var(--color-surface);
+  }
+  .other:hover .other-icon {
+    background: var(--color-ivory);
+  }
+  .other :global(.other-arrow) {
+    position: absolute;
+    top: 1.75rem;
+    right: 1.75rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    transition: transform 0.35s var(--ease-brand);
+  }
+  .other:hover :global(.other-arrow) {
+    transform: translateX(4px);
+  }
+</style>

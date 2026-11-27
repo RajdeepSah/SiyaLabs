@@ -1,0 +1,24 @@
+---
+import type { Service } from '../../data/services';
+import AutomationGraphic from './AutomationGraphic.astro';
+import SecurityGraphic from './SecurityGraphic.astro';
+import TestingGraphic from './TestingGraphic.astro';
+import DevelopmentGraphic from './DevelopmentGraphic.astro';
+import AssistantGraphic from './AssistantGraphic.astro';
+
+interface Props {
+  service: Service;
+  class?: string;
+}
+const { service, class: className } = Astro.props;
+const graphics = {
+  'ai-automation': AutomationGraphic,
+  cybersecurity: SecurityGraphic,
+  'ai-software-testing': TestingGraphic,
+  'software-development': DevelopmentGraphic,
+  'ai-assistants': AssistantGraphic,
+} as const;
+const Graphic = graphics[service.slug];
+---
+
+<Graphic label={service.graphicLabel} class={className} />

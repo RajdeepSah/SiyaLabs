@@ -1,0 +1,83 @@
+---
+import Icon from './Icon.astro';
+import { SITE } from '../../config/site';
+
+interface Props {
+  title?: string;
+  text?: string;
+}
+const {
+  title = 'Have a problem worth solving?',
+  text = 'Tell us about it. We will help you find the simplest path to software that works.',
+} = Astro.props;
+---
+
+<section class="section-sm" aria-labelledby="cta-title">
+  <div class="container-site">
+    <div class="cta relative isolate overflow-hidden rounded-[2rem] px-6 py-16 sm:px-12 sm:py-20 lg:px-20 lg:py-24">
+      <svg class="cta-deco" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+        <circle cx="200" cy="200" r="150"></circle>
+        <circle cx="262" cy="250" r="110"></circle>
+        <line x1="20" y1="400" x2="390" y2="0"></line>
+        <circle class="dash" cx="200" cy="200" r="190"></circle>
+      </svg>
+      <div class="relative max-w-2xl">
+        <h2 id="cta-title" class="h2" data-reveal>{title}</h2>
+        <p class="cta-text mt-6" data-reveal>{text}</p>
+        <div class="mt-10 flex flex-wrap gap-3" data-reveal>
+          <a href="/contact/" class="btn btn-light">Get in touch <Icon name="arrow-right" /></a>
+          <a href={`mailto:${SITE.email}`} class="btn btn-outline-light">{SITE.email}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta {
+    background: var(--color-terracotta);
+    color: var(--color-ivory);
+  }
+  .cta :focus-visible {
+    outline-color: var(--color-ivory);
+  }
+  .cta-text {
+    font-size: clamp(1.125rem, 1.04rem + 0.4vw, 1.3125rem);
+    line-height: 1.55;
+    max-width: 34rem;
+  }
+  .cta .btn-light {
+    color: var(--color-pine);
+  }
+  .cta .btn-outline-light {
+    box-shadow: inset 0 0 0 1px rgb(247 243 234 / 0.5);
+  }
+  .cta .btn-outline-light:hover {
+    box-shadow: inset 0 0 0 1px var(--color-ivory);
+  }
+  .cta-deco {
+    position: absolute;
+    z-index: -1;
+    right: -12%;
+    top: 50%;
+    width: min(70%, 640px);
+    translate: 0 -50%;
+    fill: none;
+    stroke: var(--color-ivory);
+    stroke-opacity: 0.18;
+    stroke-width: 1;
+  }
+  .cta-deco .dash {
+    stroke-dasharray: 0.1 7;
+    stroke-linecap: round;
+    stroke-width: 1.5;
+    stroke-opacity: 0.35;
+  }
+  @media (max-width: 40rem) {
+    .cta-deco {
+      right: -40%;
+      width: 120%;
+      opacity: 0.6;
+    }
+  }
+</style>

@@ -1,0 +1,69 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/ui/PageHeader.astro';
+import ServiceGraphic from '../../components/graphics/ServiceGraphic.astro';
+import ClosingCta from '../../components/ui/ClosingCta.astro';
+import Icon from '../../components/ui/Icon.astro';
+import { services } from '../../data/services';
+import { breadcrumbSchema } from '../../lib/schema';
+---
+
+<BaseLayout
+  title="Services | Siya Labs"
+  description="AI automation, cybersecurity SaaS, AI software testing, web and software development, and AI business assistants: the five things Siya Labs builds."
+  og="services"
+  schema={[
+    breadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: 'Services', path: '/services/' },
+    ]),
+  ]}
+>
+  <PageHeader
+    eyebrow="Services"
+    title="What we build"
+    lede="Five disciplines, delivered by one team. Each is built on the same foundations: practical engineering, security by default, and results you can verify."
+  />
+
+  <div class="pb-8">
+    {
+      services.map((s, i) => (
+        <section class="section-sm border-t border-line" id={s.slug} aria-labelledby={`${s.slug}-title`}>
+          <div class="container-site grid items-center gap-10 lg:grid-cols-12 lg:gap-6">
+            <div class:list={['lg:col-span-6', i % 2 === 1 && 'lg:order-2 lg:col-start-7']} data-reveal>
+              <a href={`/services/${s.slug}/`} class="panel block p-[7%]" tabindex="-1" aria-hidden="true">
+                <ServiceGraphic service={s} />
+              </a>
+            </div>
+            <div class:list={['lg:col-span-5', i % 2 === 1 ? 'lg:order-1 lg:col-start-1' : 'lg:col-start-8']}>
+              <p class="eyebrow" data-reveal>
+                Service {s.number}
+              </p>
+              <h2 id={`${s.slug}-title`} class="h2 mt-4" data-reveal>
+                {s.name}
+              </h2>
+              <p class="lede mt-5" data-reveal>
+                {s.summary}
+              </p>
+              <ul class="mt-7 space-y-3" data-reveal>
+                {s.highlights.map((h) => (
+                  <li class="flex gap-3">
+                    <Icon name="check" class="mt-[0.2rem] size-5 shrink-0 text-terracotta" />
+                    <span>{h}</span>
+                  </li>
+                ))}
+              </ul>
+              <div class="mt-9" data-reveal>
+                <a href={`/services/${s.slug}/`} class="link-arrow">
+                  Explore {s.name} <Icon name="arrow-right" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      ))
+    }
+  </div>
+
+  <ClosingCta />
+</BaseLayout>

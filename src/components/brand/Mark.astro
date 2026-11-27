@@ -1,0 +1,30 @@
+---
+/**
+ * The Siya Labs "S" mark (vector traced from the brand sheet).
+ * Two interlocking halves; pass upperClass/lowerClass to animate them.
+ */
+import mark from './mark.json';
+
+interface Props {
+  class?: string;
+  /** Accessible name. Omit for decorative use (aria-hidden). */
+  title?: string;
+  upperClass?: string;
+  lowerClass?: string;
+}
+const { class: className, title, upperClass, lowerClass } = Astro.props;
+const viewBox = mark.viewBox.join(' ');
+---
+
+<svg
+  viewBox={viewBox}
+  class={className}
+  fill="currentColor"
+  role={title ? 'img' : undefined}
+  aria-label={title}
+  aria-hidden={title ? undefined : 'true'}
+  focusable="false"
+>
+  <path class={upperClass} d={mark.paths.upper}></path>
+  <path class={lowerClass} d={mark.paths.lower}></path>
+</svg>

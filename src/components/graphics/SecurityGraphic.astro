@@ -1,0 +1,144 @@
+---
+/**
+ * Cybersecurity SaaS: a scan sweeps a grid of assets, one finding is flagged
+ * (terracotta) with a callout, then resolved. The loop starts on the flagged
+ * state so the static frame still tells the story.
+ */
+interface Props {
+  label: string;
+  class?: string;
+}
+const { label, class: className = '' } = Astro.props;
+const cells: { x: number; y: number; flag: boolean }[] = [];
+for (let r = 0; r < 4; r++) {
+  for (let c = 0; c < 6; c++) {
+    cells.push({ x: 97 + c * 50, y: 87 + r * 50, flag: r === 2 && c === 4 });
+  }
+}
+const f = cells.find((c) => c.flag)!;
+---
+
+<svg class={`gfx ${className}`} viewBox="0 0 480 360" role="img" aria-label={label} data-animate>
+  {
+    cells
+      .filter((c) => !c.flag)
+      .map((c) => (
+        <g>
+          <rect class="ln soft" x={c.x} y={c.y} width="36" height="36" rx="7" />
+          <circle class="dot" cx={c.x + 18} cy={c.y + 18} r="2.25" />
+        </g>
+      ))
+  }
+
+  <!-- scan band -->
+  <g class="scan">
+    <rect class="band" x="77" y="22" width="326" height="40"></rect>
+    <path class="ln scanline" d="M77 62H403"></path>
+  </g>
+
+  <!-- the finding -->
+  <rect class="cell-fill" x={f.x} y={f.y} width="36" height="36" rx="7"></rect>
+  <rect class="ln cell" x={f.x} y={f.y} width="36" height="36" rx="7"></rect>
+  <circle class="flag-dot" cx={f.x + 18} cy={f.y + 18} r="3.5"></circle>
+  <path class="ln check" d={`M${f.x + 10} ${f.y + 19}l5.5 5.5L${f.x + 27} ${f.y + 12}`} pathLength="1"></path>
+
+  <g class="callout">
+    <path class="ln callout-line" d={`M${f.x + 36} ${f.y}L${f.x + 62} ${f.y - 26}H368`} pathLength="1"></path>
+    <rect class="ln tag" x="368" y="140" width="84" height="42" rx="8"></rect>
+    <rect class="sev" x="380" y="151" width="22" height="8" rx="4"></rect>
+    <path class="ln soft" d="M380 170H438"></path>
+    <path class="ln soft" d="M410 155H438"></path>
+  </g>
+</svg>
+
+<style>
+  .soft {
+    stroke-opacity: 0.4;
+  }
+  .dot {
+    fill: currentColor;
+    fill-opacity: 0.3;
+  }
+  .band {
+    fill: currentColor;
+    fill-opacity: 0.05;
+  }
+  .scanline {
+    stroke-opacity: 0.75;
+  }
+  .scan {
+    opacity: 0;
+    animation: sec-scan 7s var(--ease-flow) infinite both;
+  }
+  .cell-fill {
+    fill: var(--color-terracotta);
+    fill-opacity: 0.14;
+    animation: sec-fill 7s ease infinite both;
+  }
+  .ln.cell {
+    stroke: var(--color-terracotta);
+    animation: sec-cell 7s ease infinite both;
+  }
+  .flag-dot {
+    fill: var(--color-terracotta);
+    animation: sec-flagdot 7s ease infinite both;
+  }
+  .ln.check {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: sec-check 7s ease infinite both;
+  }
+  .callout {
+    animation: sec-callout 7s ease infinite both;
+  }
+  .ln.callout-line {
+    stroke: var(--color-terracotta);
+    stroke-dasharray: 1;
+    animation: sec-callout-line 7s ease infinite both;
+  }
+  .ln.tag {
+    stroke: var(--color-terracotta);
+  }
+  .sev {
+    fill: var(--color-terracotta);
+  }
+
+  @keyframes sec-scan {
+    0%, 24% { opacity: 0; translate: 0 0; }
+    27% { opacity: 1; }
+    62% { opacity: 1; }
+    66% { opacity: 0; translate: 0 250px; }
+    100% { opacity: 0; translate: 0 250px; }
+  }
+  /* flagged → resolved (8–14%) → re-flagged as the scan passes (≈50%) */
+  @keyframes sec-cell {
+    0%, 8% { stroke: var(--color-terracotta); }
+    14%, 48% { stroke: var(--color-pine); }
+    51%, 100% { stroke: var(--color-terracotta); }
+  }
+  @keyframes sec-fill {
+    0%, 8% { fill-opacity: 0.14; }
+    14%, 48% { fill-opacity: 0; }
+    51%, 100% { fill-opacity: 0.14; }
+  }
+  @keyframes sec-flagdot {
+    0%, 7% { opacity: 1; scale: 1; }
+    10%, 48% { opacity: 0; }
+    51%, 100% { opacity: 1; }
+  }
+  @keyframes sec-check {
+    0%, 9% { stroke-dashoffset: 1; opacity: 1; }
+    15%, 24% { stroke-dashoffset: 0; opacity: 1; }
+    28%, 100% { stroke-dashoffset: 0; opacity: 0; }
+  }
+  @keyframes sec-callout {
+    0%, 16% { opacity: 1; }
+    21%, 52% { opacity: 0; }
+    56%, 100% { opacity: 1; }
+  }
+  @keyframes sec-callout-line {
+    0%, 52% { stroke-dashoffset: 0; }
+    52.5% { stroke-dashoffset: 1; }
+    58%, 100% { stroke-dashoffset: 0; }
+  }
+</style>

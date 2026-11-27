@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/ui/PageHeader.astro';
+import ContactForm from '../components/contact/ContactForm.astro';
+import { SITE } from '../config/site';
+import { nextSteps } from '../data/company';
+import { breadcrumbSchema } from '../lib/schema';
+---
+
+<BaseLayout
+  title="Contact | Siya Labs"
+  description="Tell Siya Labs what you are working on: a workflow to automate, software to build, testing to improve, or a security question."
+  og="contact"
+  schema={[
+    breadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: 'Contact', path: '/contact/' },
+    ]),
+  ]}
+>
+  <PageHeader
+    eyebrow="Contact"
+    title="Let’s build something intentional."
+    lede="Tell us what you are working on. Whether it is a workflow to automate, software to build, or a security question, we would like to hear about it."
+  />
+
+  <section class="pb-24 lg:pb-32" aria-label="Contact form">
+    <div class="container-site grid gap-12 lg:grid-cols-12 lg:gap-6">
+      <div class="lg:col-span-7">
+        <div class="rounded-[1.75rem] bg-surface p-6 sm:p-10">
+          <ContactForm />
+        </div>
+      </div>
+
+      <aside class="lg:col-span-4 lg:col-start-9" aria-label="Other ways to reach us">
+        <h2 class="eyebrow">Prefer email?</h2>
+        <a href={`mailto:${SITE.email}`} class="mail mt-4">{SITE.email}</a>
+
+        <h2 class="eyebrow mt-14">What happens next</h2>
+        <ol class="mt-6 space-y-6">
+          {
+            nextSteps.map((step, i) => (
+              <li class="flex gap-4">
+                <span class="node">{i + 1}</span>
+                <div>
+                  <p class="font-medium">{step.title}</p>
+                  <p class="muted mt-1 text-[0.9375rem]">{step.text}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .mail {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+    letter-spacing: -0.02em;
+    word-break: break-all;
+    text-decoration: underline;
+    text-decoration-color: var(--color-line-strong);
+    text-underline-offset: 0.25em;
+    transition: text-decoration-color 0.2s ease;
+  }
+  .mail:hover {
+    text-decoration-color: currentColor;
+  }
+  .node {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 999px;
+    box-shadow: inset 0 0 0 1px var(--color-pine);
+    font-weight: 500;
+    font-size: 0.8125rem;
+  }
+</style>

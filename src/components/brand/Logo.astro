@@ -1,0 +1,28 @@
+---
+/**
+ * Full Siya Labs lockup: mark + "Siya Labs" wordmark (Sora Bold outlines).
+ * Inherits color from `currentColor`.
+ */
+import logo from './logo.json';
+
+interface Props {
+  class?: string;
+  /** Accessible name. Omit when the parent link already has a label. */
+  title?: string;
+}
+const { class: className, title } = Astro.props;
+---
+
+<svg
+  viewBox={logo.viewBox.join(' ')}
+  class={className}
+  fill="currentColor"
+  role={title ? 'img' : undefined}
+  aria-label={title}
+  aria-hidden={title ? undefined : 'true'}
+  focusable="false"
+>
+  <path d={logo.mark.upper}></path>
+  <path d={logo.mark.lower}></path>
+  <path d={logo.wordmark}></path>
+</svg>

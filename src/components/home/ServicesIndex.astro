@@ -1,0 +1,167 @@
+---
+import { services } from '../../data/services';
+import ServiceGraphic from '../graphics/ServiceGraphic.astro';
+import ServiceIcon from '../graphics/ServiceIcon.astro';
+import Icon from '../ui/Icon.astro';
+---
+
+<section class="section" aria-labelledby="services-title" data-services-index>
+  <div class="container-site">
+    <div class="grid gap-y-6 lg:grid-cols-12 lg:items-end lg:gap-x-6">
+      <div class="lg:col-span-7">
+        <p class="eyebrow" data-reveal>What we build</p>
+        <h2 id="services-title" class="h2 mt-5" data-reveal>Five disciplines. One standard of care.</h2>
+      </div>
+      <p class="lede lg:col-span-5 lg:pb-1.5" data-reveal>
+        From automating everyday work to securing the systems it runs on, we build software that earns its place
+        in your business.
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-x-6 lg:mt-20 lg:grid-cols-12">
+      <ol class="border-t border-line lg:col-span-6" data-reveal-stagger>
+        {
+          services.map((s) => (
+            <li data-reveal>
+              <a href={`/services/${s.slug}/`} class="row" data-service-row>
+                <span class="num">{s.number}</span>
+                <span class="icon">
+                  <ServiceIcon slug={s.slug} class="size-6" />
+                </span>
+                <span class="min-w-0">
+                  <span class="name">{s.name}</span>
+                  <span class="short">{s.short}</span>
+                </span>
+                <Icon name="arrow-right" class="arrow" />
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+
+      <div class="hidden lg:col-span-6 lg:block" aria-hidden="true">
+        <div class="panel preview" data-services-panel>
+          {
+            services.map((s, i) => (
+              <div class="slide" data-service-slide data-active={i === 0 ? '' : undefined}>
+                <ServiceGraphic service={s} class="slide-gfx" />
+                <p class="caption">
+                  {s.number} — {s.name}
+                </p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1.25rem;
+    padding-block: 1.6rem;
+    border-bottom: 1px solid var(--color-line);
+    text-decoration: none;
+  }
+  .num {
+    display: none;
+    width: 2.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-ink-muted);
+    transition: color 0.3s ease;
+  }
+  .icon {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    background: var(--color-surface);
+  }
+  .name {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.3rem, 1.15rem + 0.6vw, 1.75rem);
+    line-height: 1.2;
+    letter-spacing: -0.022em;
+    transition: color 0.3s ease;
+  }
+  .short {
+    display: block;
+    margin-top: 0.3rem;
+    color: var(--color-ink-muted);
+    font-size: 1rem;
+  }
+  .row :global(.arrow) {
+    width: 1.25rem;
+    height: 1.25rem;
+    opacity: 0.4;
+    transition:
+      transform 0.4s var(--ease-brand),
+      opacity 0.3s ease;
+  }
+  .row:hover :global(.arrow),
+  .row[data-active] :global(.arrow) {
+    opacity: 1;
+    transform: translateX(4px);
+  }
+  @media (min-width: 64rem) {
+    .num {
+      display: block;
+    }
+    .icon {
+      display: none;
+    }
+    .row {
+      padding-block: 1.9rem;
+    }
+    .row:not([data-active]) .name {
+      color: var(--color-ink-muted);
+    }
+    .row[data-active] .num {
+      color: var(--color-terracotta);
+    }
+  }
+
+  .preview {
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+    aspect-ratio: 4 / 3.25;
+  }
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 7% 7% 13%;
+    opacity: 0;
+    scale: 0.985;
+    transition:
+      opacity 0.5s ease,
+      scale 0.7s var(--ease-brand);
+  }
+  .slide[data-active] {
+    opacity: 1;
+    scale: 1;
+  }
+  .slide :global(.slide-gfx) {
+    max-height: 100%;
+  }
+  .caption {
+    position: absolute;
+    left: 1.75rem;
+    bottom: 1.5rem;
+    font-weight: 500;
+    font-size: 0.8125rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+</style>

@@ -1,0 +1,38 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  lede?: string;
+}
+const { eyebrow, title, lede } = Astro.props;
+---
+
+<section class="page-header" aria-labelledby="page-title">
+  <div class="container-site">
+    <slot name="before" />
+    <p class="eyebrow ph-in">{eyebrow}</p>
+    <h1 id="page-title" class="h1 mt-5 max-w-4xl">{title}</h1>
+    {lede && <p class="lede ph-in d2 mt-7 max-w-2xl">{lede}</p>}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .page-header {
+    padding-block: clamp(3rem, 1rem + 6vw, 6.5rem) clamp(2.5rem, 1rem + 4vw, 4.5rem);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .ph-in {
+      animation: ph-in 0.9s var(--ease-brand) both;
+    }
+    .d2 {
+      animation-delay: 0.1s;
+    }
+  }
+  @keyframes ph-in {
+    from {
+      opacity: 0;
+      translate: 0 12px;
+    }
+  }
+</style>

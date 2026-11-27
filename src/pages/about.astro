@@ -1,0 +1,174 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/ui/PageHeader.astro';
+import FounderPortrait from '../components/about/FounderPortrait.astro';
+import ClosingCta from '../components/ui/ClosingCta.astro';
+import Icon from '../components/ui/Icon.astro';
+import { mission, differentiators } from '../data/company';
+import { founder } from '../data/founder';
+import { breadcrumbSchema } from '../lib/schema';
+---
+
+<BaseLayout
+  title="About | Siya Labs"
+  description="Siya Labs is a technology company focused on applied AI, cybersecurity, and software engineering, led by founder and CEO Rajdeep Sah."
+  og="about"
+  schema={[
+    breadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: 'About', path: '/about/' },
+    ]),
+  ]}
+>
+  <PageHeader
+    eyebrow="About Siya Labs"
+    title="We build technology that earns its place."
+    lede="Siya Labs is a technology company focused on applied AI, cybersecurity, and software engineering. We help businesses put intelligent, secure software to work, and we hold ourselves to the standards of a research lab: rigor, honesty, and evidence."
+  />
+
+  <section class="section-sm pt-6" aria-label="Mission and vision">
+    <div class="container-site grid gap-6 md:grid-cols-2">
+      <div class="statement" data-reveal>
+        <p class="eyebrow">Our mission</p>
+        <h2 class="h3 mt-8">{mission.mission}</h2>
+      </div>
+      <div class="statement" data-reveal>
+        <p class="eyebrow">Our vision</p>
+        <h2 class="h3 mt-8">{mission.vision}</h2>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-sm" aria-labelledby="different-title">
+    <div class="container-site grid gap-12 lg:grid-cols-12 lg:gap-6">
+      <div class="lg:col-span-4">
+        <p class="eyebrow" data-reveal>Why Siya Labs</p>
+        <h2 id="different-title" class="h2 mt-5" data-reveal>What makes us different</h2>
+      </div>
+      <ul class="grid gap-x-6 sm:grid-cols-2 lg:col-span-8" data-reveal-stagger>
+        {
+          differentiators.map((d) => (
+            <li class="diff" data-reveal>
+              <h3 class="h4">{d.title}</h3>
+              <p class="muted mt-2">{d.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section id="founder" class="section-sm" aria-labelledby="founder-title">
+    <div class="container-site">
+      <div class="grid gap-12 lg:grid-cols-12 lg:gap-6">
+        <div class="lg:col-span-5" data-reveal>
+          <div class="lg:sticky lg:top-28">
+            <FounderPortrait sizes="(min-width: 1024px) 36vw, (min-width: 640px) 70vw, 92vw" />
+          </div>
+        </div>
+        <div class="lg:col-span-6 lg:col-start-7">
+          <p class="eyebrow" data-reveal>Founder</p>
+          <h2 id="founder-title" class="h2 mt-5" data-reveal>{founder.name}</h2>
+          <p class="mt-2 font-medium text-ink-muted" data-reveal>{founder.role}</p>
+
+          <div class="mt-8 space-y-5 text-[1.0625rem]" data-reveal>
+            {founder.bio.map((p) => <p>{p}</p>)}
+          </div>
+
+          <figure class="quote mt-10" data-reveal>
+            <blockquote>
+              <p>“{founder.quote}”</p>
+            </blockquote>
+            <figcaption class="muted mt-4 text-sm">{founder.name}</figcaption>
+          </figure>
+
+          <ul class="mt-10 flex flex-wrap gap-3" data-reveal>
+            {
+              founder.links.map((l) => (
+                <li>
+                  <a href={l.href} class="btn btn-secondary btn-sm" rel="noopener me" target="_blank">
+                    {l.label} <Icon name="arrow-up-right" />
+                    <span class="sr-only">(opens in a new tab)</span>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-20 grid gap-x-6 gap-y-12 border-t border-line pt-12 sm:grid-cols-2 lg:mt-28 lg:grid-cols-4">
+        {
+          founder.background.map((group) => (
+            <div data-reveal>
+              <h3 class="eyebrow">{group.heading}</h3>
+              <ul class="mt-6 space-y-5">
+                {group.items.map((item) => (
+                  <li>
+                    {'href' in item && item.href ? (
+                      <a href={item.href} class="prose-link font-medium" rel="noopener" target="_blank">
+                        {item.title}
+                        <span class="sr-only"> (opens in a new tab)</span>
+                      </a>
+                    ) : (
+                      <p class="font-medium">{item.title}</p>
+                    )}
+                    <p class="muted mt-1 text-sm">{item.meta}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="mt-16" data-reveal>
+        <h3 class="eyebrow">Expertise</h3>
+        <ul class="mt-6 flex flex-wrap gap-2">
+          {founder.expertise.map((e) => <li class="tag">{e}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <ClosingCta
+    title="Let’s talk about your project."
+    text="Whether you have a clear brief or just a problem worth exploring, we would like to hear from you."
+  />
+</BaseLayout>
+
+<style>
+  .statement {
+    padding: clamp(1.75rem, 1rem + 3vw, 3rem);
+    border-radius: 1.5rem;
+    background: var(--color-surface);
+    min-height: 15rem;
+  }
+  .statement .h3 {
+    font-size: clamp(1.5rem, 1.25rem + 1vw, 2.125rem);
+    line-height: 1.18;
+    letter-spacing: -0.028em;
+    max-width: 30ch;
+  }
+  .diff {
+    padding-block: 1.75rem 2.25rem;
+    border-top: 1px solid var(--color-line);
+  }
+  .quote {
+    padding-left: 1.5rem;
+    border-left: 2px solid var(--color-terracotta);
+  }
+  .quote blockquote p {
+    font-size: clamp(1.1875rem, 1.1rem + 0.4vw, 1.375rem);
+    line-height: 1.5;
+  }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.25rem;
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    background: var(--color-surface);
+    font-size: 0.9375rem;
+  }
+</style>

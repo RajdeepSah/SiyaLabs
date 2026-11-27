@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Mark from '../components/brand/Mark.astro';
+import Icon from '../components/ui/Icon.astro';
+---
+
+<BaseLayout title="Page not found | Siya Labs" description="The page you are looking for does not exist." noindex>
+  <section class="section">
+    <div class="container-site grid items-center gap-12 md:grid-cols-12 md:gap-6">
+      <div class="md:col-span-7">
+        <p class="eyebrow">Error 404</p>
+        <h1 class="h1 mt-5">This page has gone missing.</h1>
+        <p class="lede mt-6 max-w-lg">The link may be broken, or the page may have moved.</p>
+        <div class="mt-10 flex flex-wrap gap-3">
+          <a href="/" class="btn btn-primary">Back to home <Icon name="arrow-right" /></a>
+          <a href="/contact/" class="btn btn-secondary">Contact us</a>
+        </div>
+      </div>
+      <div class="md:col-span-4 md:col-start-9">
+        <div class="apart" aria-hidden="true">
+          <Mark class="mx-auto w-full max-w-[16rem]" upperClass="up" lowerClass="down" />
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .apart {
+    color: var(--color-pine);
+    padding: 2.5rem;
+  }
+  .apart :global(svg) {
+    overflow: visible;
+  }
+  .apart :global(.up) {
+    translate: 22px -24px;
+  }
+  .apart :global(.down) {
+    translate: -22px 24px;
+    fill: var(--color-terracotta);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .apart :global(.up) {
+      animation: drift-up 6s var(--ease-flow) infinite alternate;
+    }
+    .apart :global(.down) {
+      animation: drift-down 6s var(--ease-flow) infinite alternate;
+    }
+  }
+  @keyframes drift-up {
+    to {
+      translate: 30px -33px;
+    }
+  }
+  @keyframes drift-down {
+    to {
+      translate: -30px 33px;
+    }
+  }
+</style>

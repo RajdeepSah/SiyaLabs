@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/ui/PageHeader.astro';
+import { SITE } from '../config/site';
+// TODO(launch): review this policy (and have it checked if needed) before going live.
+const updated = 'November 26, 2026';
+---
+
+<BaseLayout
+  title="Privacy Policy | Siya Labs"
+  description="How Siya Labs handles the information you share through this website."
+  og="privacy"
+>
+  <PageHeader eyebrow="Legal" title="Privacy policy" lede={`Last updated ${updated}.`} />
+
+  <section class="pb-24 lg:pb-32">
+    <div class="container-site">
+      <div class="policy">
+        <h2>The short version</h2>
+        <p>
+          This website does not use cookies, advertising trackers, or analytics. The only personal information we
+          receive is what you choose to send us through the contact form or by email, and we use it only to reply
+          to you.
+        </p>
+
+        <h2>Information we collect</h2>
+        <p>
+          When you use the contact form, we receive your name, email address, optional company name, the services
+          you select, and your message. If you email us directly, we receive your email address and whatever you
+          include in your message.
+        </p>
+
+        <h2>How we use it</h2>
+        <p>
+          We use your information to respond to your inquiry and, if you choose to work with us, to discuss and
+          deliver that work. We do not sell your information, and we do not add you to marketing lists.
+        </p>
+
+        <h2>Service providers</h2>
+        <p>
+          Contact form submissions are delivered to our inbox by
+          <a class="prose-link" href="https://web3forms.com/privacy" rel="noopener" target="_blank"
+            >Web3Forms<span class="sr-only"> (opens in a new tab)</span></a
+          >. Like most websites, our hosting provider may keep standard server logs, such as IP addresses and
+          request times, for security and reliability.
+        </p>
+
+        <h2>How long we keep it</h2>
+        <p>
+          We keep inquiry emails only as long as needed to respond and to maintain ordinary business records. You
+          can ask us to delete them at any time.
+        </p>
+
+        <h2>Your choices</h2>
+        <p>
+          You can ask to see, correct, or delete the information you have sent us by emailing
+          <a class="prose-link" href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+        </p>
+
+        <h2>Changes</h2>
+        <p>If this policy changes, we will update this page and the date above.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .policy {
+    max-width: 44rem;
+  }
+  .policy h2 {
+    margin-top: 3rem;
+    font-size: 1.375rem;
+    letter-spacing: -0.02em;
+  }
+  .policy h2:first-child {
+    margin-top: 0;
+  }
+  .policy p {
+    margin-top: 0.9rem;
+    color: var(--color-ink-muted);
+  }
+</style>

@@ -1,0 +1,107 @@
+---
+import { process } from '../../data/company';
+---
+
+<section class="section" aria-labelledby="process-title">
+  <div class="container-site">
+    <div class="max-w-2xl">
+      <p class="eyebrow" data-reveal>How we work</p>
+      <h2 id="process-title" class="h2 mt-5" data-reveal>A clear path from problem to production.</h2>
+    </div>
+    <ol class="steps mt-14 lg:mt-20" data-reveal>
+      {
+        process.map((step, i) => (
+          <li class="step">
+            <span class="node">0{i + 1}</span>
+            <div>
+              <h3 class="h4">{step.title}</h3>
+              <p class="muted mt-2">{step.text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .steps {
+    position: relative;
+    display: grid;
+    gap: 2.25rem;
+  }
+  /* the connecting line: vertical on mobile, horizontal on desktop */
+  .steps::before {
+    content: '';
+    position: absolute;
+    left: 1.375rem;
+    top: 1.375rem;
+    bottom: 1.375rem;
+    width: 1px;
+    background: var(--color-line-strong);
+    transform-origin: top;
+  }
+  .step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.75rem 1fr;
+    gap: 1.25rem;
+    align-items: start;
+    align-content: start;
+  }
+  .node {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    background: var(--color-ivory);
+    box-shadow: inset 0 0 0 1px var(--color-pine);
+    font-weight: 500;
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .step:last-child .node {
+    background: var(--color-pine);
+    color: var(--color-ivory);
+  }
+  .step > div {
+    padding-top: 0.55rem;
+  }
+  @media (min-width: 64rem) {
+    .steps {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+    .steps::before {
+      left: 1.375rem;
+      right: calc(25% - 1.375rem);
+      top: 1.375rem;
+      bottom: auto;
+      width: auto;
+      height: 1px;
+      transform-origin: left;
+    }
+    .step {
+      grid-template-columns: 1fr;
+      gap: 1.75rem;
+    }
+    .step > div {
+      padding-top: 0;
+      padding-right: 1.5rem;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .steps::before {
+      transition: scale 1.6s var(--ease-flow) 0.2s;
+    }
+    :global(.js) .steps:not(.is-visible)::before {
+      scale: 1 0;
+    }
+    @media (min-width: 64rem) {
+      :global(.js) .steps:not(.is-visible)::before {
+        scale: 0 1;
+      }
+    }
+  }
+</style>

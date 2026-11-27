@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import ServicesIndex from '../components/home/ServicesIndex.astro';
+import Principles from '../components/home/Principles.astro';
+import Process from '../components/home/Process.astro';
+import FounderTeaser from '../components/home/FounderTeaser.astro';
+import ClosingCta from '../components/ui/ClosingCta.astro';
+import { SITE } from '../config/site';
+---
+
+<BaseLayout title="Siya Labs | AI Automation, Cybersecurity & Software Engineering" description={SITE.description}>
+  <Hero />
+  <ServicesIndex />
+  <Principles />
+  <Process />
+  <FounderTeaser />
+  <ClosingCta />
+</BaseLayout>

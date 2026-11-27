@@ -1,0 +1,189 @@
+---
+/**
+ * AI Business Assistants: a question, a grounded answer, then a tool call to
+ * a connected system (calendar) that confirms the action.
+ * Frame 0 = the finished conversation.
+ */
+interface Props {
+  label: string;
+  class?: string;
+}
+const { label, class: className = '' } = Astro.props;
+const slots = [
+  [378, 242],
+  [400, 242],
+  [422, 242],
+  [378, 260],
+  [400, 260],
+  [422, 260],
+];
+---
+
+<svg class={`gfx ${className}`} viewBox="0 0 480 360" role="img" aria-label={label} data-animate>
+  <rect class="ln" x="40" y="36" width="280" height="288" rx="16"></rect>
+  <circle class="ink" cx="64" cy="61" r="9"></circle>
+  <path class="ln title" d="M82 57H150"></path>
+  <path class="ln soft" d="M82 68H118"></path>
+  <path class="ln soft" d="M40 86H320"></path>
+
+  <g class="m m-user">
+    <rect class="ln" x="150" y="102" width="150" height="38" rx="14"></rect>
+    <path class="ln soft" d="M166 116H284M166 128H236"></path>
+  </g>
+
+  <g class="m m-a1">
+    <rect class="bubble" x="60" y="154" width="190" height="60" rx="14"></rect>
+    <g class="a1-lines">
+      <path class="ln soft" d="M76 170H232M76 184H218M76 198H170"></path>
+    </g>
+    <g class="typing">
+      <circle class="tdot d1" cx="80" cy="184" r="3.5"></circle>
+      <circle class="tdot d2" cx="94" cy="184" r="3.5"></circle>
+      <circle class="tdot d3" cx="108" cy="184" r="3.5"></circle>
+    </g>
+  </g>
+
+  <g class="m m-chip">
+    <rect class="ln chip" x="60" y="228" width="116" height="26" rx="13"></rect>
+    <path class="ln" d="M79 233.5l-4.5 8h6.5l-4.5 8"></path>
+    <path class="ln soft" d="M92 241H160"></path>
+  </g>
+
+  <path class="ln soft dashed" d="M176 241H360"></path>
+  <path class="pulse" d="M176 241H360" pathLength="1"></path>
+
+  <rect class="ln" x="360" y="204" width="80" height="74" rx="12"></rect>
+  <path class="ln" d="M360 222H440"></path>
+  {slots.map(([cx, cy], i) => <circle class={i === 5 ? 'slot booked' : 'slot'} cx={cx} cy={cy} r="3.5" />)}
+
+  <g class="badge">
+    <circle class="badge-fill" cx="440" cy="204" r="10"></circle>
+    <path class="badge-check" d="M435.4 204.3l3 3 6.2-6.4"></path>
+  </g>
+
+  <g class="m m-a2">
+    <rect class="bubble" x="60" y="268" width="162" height="36" rx="14"></rect>
+    <path class="ln soft" d="M76 281H204M76 292H160"></path>
+  </g>
+</svg>
+
+<style>
+  .soft {
+    stroke-opacity: 0.42;
+  }
+  .dashed {
+    stroke-dasharray: 3 5;
+  }
+  .ln.title {
+    stroke-width: 3;
+  }
+  .ink {
+    fill: currentColor;
+  }
+  .bubble {
+    fill: currentColor;
+    fill-opacity: 0.07;
+  }
+  .ln.chip {
+    stroke-opacity: 0.55;
+  }
+  .slot {
+    fill: currentColor;
+    fill-opacity: 0.25;
+  }
+  .slot.booked {
+    animation: ast-slot 8s ease infinite both;
+  }
+  .badge {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: ast-badge 8s var(--ease-brand) infinite both;
+  }
+  .badge-fill {
+    fill: var(--color-terracotta);
+  }
+  .badge-check {
+    fill: none;
+    stroke: var(--color-ivory);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .typing {
+    opacity: 0;
+    animation: ast-typing 8s linear infinite both;
+  }
+  .tdot {
+    fill: currentColor;
+    fill-opacity: 0.5;
+    animation: ast-bounce 0.9s ease-in-out infinite;
+  }
+  .d2 { animation-delay: 0.15s; }
+  .d3 { animation-delay: 0.3s; }
+  .a1-lines { animation: ast-lines 8s ease infinite both; }
+  .m-user { animation: ast-user 8s var(--ease-brand) infinite both; }
+  .m-a1 { animation: ast-a1 8s var(--ease-brand) infinite both; }
+  .m-chip { animation: ast-chip 8s var(--ease-brand) infinite both; }
+  .m-a2 { animation: ast-a2 8s var(--ease-brand) infinite both; }
+  .pulse {
+    fill: none;
+    stroke: var(--color-terracotta);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-dasharray: 0.14 2;
+    stroke-dashoffset: 0.14;
+    opacity: 0;
+    animation: ast-pulse 8s var(--ease-flow) infinite both;
+  }
+
+  @keyframes ast-user {
+    0%, 3% { opacity: 1; translate: 0 0; }
+    7%, 10% { opacity: 0; translate: 0 8px; }
+    13%, 100% { opacity: 1; translate: 0 0; }
+  }
+  @keyframes ast-a1 {
+    0%, 3% { opacity: 1; translate: 0 0; }
+    7%, 18% { opacity: 0; translate: 0 8px; }
+    21%, 100% { opacity: 1; translate: 0 0; }
+  }
+  @keyframes ast-lines {
+    0%, 3% { opacity: 1; }
+    6%, 33% { opacity: 0; }
+    37%, 100% { opacity: 1; }
+  }
+  @keyframes ast-typing {
+    0%, 20% { opacity: 0; }
+    22%, 33% { opacity: 1; }
+    35%, 100% { opacity: 0; }
+  }
+  @keyframes ast-chip {
+    0%, 3% { opacity: 1; translate: 0 0; }
+    7%, 41% { opacity: 0; translate: 0 8px; }
+    45%, 100% { opacity: 1; translate: 0 0; }
+  }
+  @keyframes ast-pulse {
+    0%, 46% { stroke-dashoffset: 0.14; opacity: 0; }
+    47% { opacity: 1; }
+    56% { stroke-dashoffset: -1; opacity: 1; }
+    57%, 100% { stroke-dashoffset: -1; opacity: 0; }
+  }
+  @keyframes ast-badge {
+    0%, 3% { opacity: 1; scale: 1; }
+    7%, 56% { opacity: 0; scale: 0.4; }
+    60%, 100% { opacity: 1; scale: 1; }
+  }
+  @keyframes ast-slot {
+    0%, 3% { fill-opacity: 1; }
+    7%, 56% { fill-opacity: 0.25; }
+    58%, 100% { fill-opacity: 1; }
+  }
+  @keyframes ast-a2 {
+    0%, 3% { opacity: 1; translate: 0 0; }
+    7%, 63% { opacity: 0; translate: 0 8px; }
+    67%, 100% { opacity: 1; translate: 0 0; }
+  }
+  @keyframes ast-bounce {
+    0%, 100% { translate: 0 0; }
+    40% { translate: 0 -3px; }
+  }
+</style>

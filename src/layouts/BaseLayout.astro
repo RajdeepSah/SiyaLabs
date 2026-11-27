@@ -1,0 +1,58 @@
+---
+import { Font } from 'astro:assets';
+import '../styles/global.css';
+import Seo from '../components/seo/Seo.astro';
+import JsonLd from '../components/seo/JsonLd.astro';
+import Header from '../components/layout/Header.astro';
+import MobileNav from '../components/layout/MobileNav.astro';
+import Footer from '../components/layout/Footer.astro';
+import { organizationSchema, websiteSchema, founderSchema } from '../lib/schema';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Slug of the generated social card under /og/, e.g. "about" → /og/about.png */
+  og?: string;
+  ogImageAlt?: string;
+  noindex?: boolean;
+  schema?: Record<string, unknown>[];
+}
+
+const { title, description, og = 'home', ogImageAlt, noindex = false, schema = [] } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" id="top">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <Font cssVariable="--font-sora" preload />
+    <Font cssVariable="--font-inter" preload={[{ weight: 400 }]} />
+    <Seo
+      title={title}
+      description={description}
+      ogImage={`/og/${og}.png`}
+      ogImageAlt={ogImageAlt}
+      noindex={noindex}
+    />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#F7F3EA" />
+    <meta name="format-detection" content="telephone=no" />
+    <JsonLd items={[organizationSchema(), websiteSchema(), founderSchema(), ...schema]} />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <Header />
+    <MobileNav />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      import '../scripts/site';
+    </script>
+  </body>
+</html>
